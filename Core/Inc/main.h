@@ -69,6 +69,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define USER_BUTTON_Pin LL_GPIO_PIN_13
+#define USER_BUTTON_GPIO_Port GPIOC
 #define MCO_Pin LL_GPIO_PIN_0
 #define MCO_GPIO_Port GPIOF
 #define USART2_TX_Pin LL_GPIO_PIN_2
