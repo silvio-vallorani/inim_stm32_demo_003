@@ -36,8 +36,10 @@ _Min_Stack_Size = 0x400 ;	/* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 36K
-  FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 128K
+  RAM		(xrw)	: ORIGIN = 0x20000000,  LENGTH = 0x8FE0		/*  36k - 32b    */ 
+  RAM2  	(xrw)	: ORIGIN = 0x200017E0,  LENGTH = 32			/*        32b    */
+  FLASH 	(rx)	: ORIGIN = 0x8000000,   LENGTH = 0x1FFE0	/* 128k - 32b    */ 
+  FLASH2	(rx)	: ORIGIN = 0x8007FE0,   LENGTH = 32			/*        32b    */
 }
 
 /* Sections */
@@ -138,6 +140,20 @@ SECTIONS
 
   } >RAM AT> FLASH
 
+  .second_flash :
+  {
+    . = ALIGN(4);
+    *(.flash2_sect1)
+    *(.flash2_sect1*)
+    *(.flash2_sect2)
+    *(.flash2_sect2*)
+    *(.flash2_sect3)
+    *(.flash2_sect3*)
+    *(.flash2_sect4)
+    *(.flash2_sect4*)
+    . = ALIGN(4);
+  } >FLASH2
+
   /* Uninitialized data section into "RAM" Ram type memory */
   . = ALIGN(4);
   .bss :
@@ -164,6 +180,20 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM
+
+  .second_ram :
+  {
+    . = ALIGN(4);
+    *(.ram2_sect1)
+    *(.ram2_sect1*)
+    *(.ram2_sect2)
+    *(.ram2_sect2*)
+    *(.ram2_sect3)
+    *(.ram2_sect3*)
+    *(.ram2_sect4)
+    *(.ram2_sect4*)
+    . = ALIGN(4);
+  } >RAM2
 
   /* Remove information from the compiler libraries */
   /DISCARD/ :

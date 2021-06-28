@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,7 +57,17 @@ void MX_FREERTOS_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+const uint8_t __USED __attribute__((section(".flash2_sect1"))) var_in_flash2_sect1[8] = "123star";
+const uint8_t __USED __attribute__((section(".flash2_sect2"))) var_in_flash2_sect2[8] = "123star";
+const uint8_t __USED __attribute__((section(".flash2_sect3"))) var_in_flash2_sect3[8] = "123star";
+const uint8_t __USED __attribute__((section(".flash2_sect4"))) var_in_flash2_sect4[8] = "123star";
 
+__IO uint8_t __USED __attribute__((section(".ram2_sect1"))) var_in_ram2_sect1[8] = "ram_var";
+__IO uint8_t __USED __attribute__((section(".ram2_sect2"))) var_in_ram2_sect2[8] = "ram_var";
+__IO uint8_t __USED __attribute__((section(".ram2_sect3"))) var_in_ram2_sect3[8] = "ram_var";
+__IO uint8_t __USED __attribute__((section(".ram2_sect4"))) var_in_ram2_sect4[8] = "ram_var";
+
+volatile uint8_t cache[1024];
 /* USER CODE END 0 */
 
 /**
@@ -90,7 +100,18 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  memcpy((uint8_t*)&cache[0], (uint8_t*)&var_in_flash2_sect1[0], 8);
+  memcpy((uint8_t*)&cache[0], (uint8_t*)&var_in_flash2_sect2[0], 8);
+  memcpy((uint8_t*)&cache[0], (uint8_t*)&var_in_flash2_sect3[0], 8);
+  memcpy((uint8_t*)&cache[0], (uint8_t*)&var_in_flash2_sect4[0], 8);
 
+  memcpy((uint8_t*)&var_in_ram2_sect1[0], (uint8_t*)&var_in_flash2_sect1[0], 8);
+  memcpy((uint8_t*)&var_in_ram2_sect2[0], (uint8_t*)&var_in_flash2_sect2[0], 8);
+  memcpy((uint8_t*)&var_in_ram2_sect3[0], (uint8_t*)&var_in_flash2_sect3[0], 8);
+  memcpy((uint8_t*)&var_in_ram2_sect4[0], (uint8_t*)&var_in_flash2_sect4[0], 8);
+
+  memset((uint8_t*)&cache[0], 0xA5, 128);
+  memcpy((uint8_t*)&var_in_ram2_sect4[0], (uint8_t*)&cache[0], 8);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
@@ -150,7 +171,7 @@ void SystemClock_Config(void)
 
  /**
   * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM1 interrupt took place, inside
+  * @note   This function is called  when TIM17 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
   * @param  htim : TIM handle
@@ -161,7 +182,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM1) {
+  if (htim->Instance == TIM17) {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
